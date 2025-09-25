@@ -11,6 +11,8 @@ const io = new Server(server, {
   cors: { origin: "*" },
 });
 
+
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -210,6 +212,40 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("Client disconnected");
     changeStream.close();
+  });
+});
+
+
+io.on("connection", (socket) => {
+  console.log("Client connected");
+
+  // Teacher stream
+  const teacherStream = Teacher.watch();
+  teacherStream.on("change", async () => {
+    const teachers = await Teacher.find();
+    socket.emit("teachersUpdated", teachers);
+  });
+
+  // Student stream
+  const studentStream = Student.watch();
+  studentStream.on("change", async () => {
+    const students = await Student.find();
+    socket.emit("studentsUpdated", students);
+  });
+
+  // HOD stream
+  const hodStream = Hod.watch();
+  hodStream.on("change", async () => {
+    const hods = await Hod.find();
+    socket.emit("hodsUpdated", hods);
+  });
+
+  // Cleanup on disconnect
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+    teacherStream.close();
+    studentStream.close();
+    hodStream.close();
   });
 });
 

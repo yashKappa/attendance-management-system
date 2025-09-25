@@ -90,12 +90,11 @@
 .hamburger {
   display: none;
   position: fixed;
-  top: 15px;
-  right: 15px;
   font-size: 24px;
-  color: #07111b;
+  color: #ffffff;
   z-index: 1000;
   cursor: pointer;
+  padding: 10px 0px;
 }
 
 /* Sidebar overlay (mobile) */
@@ -121,6 +120,8 @@
 @media screen and (max-width: 768px) {
   .hamburger {
     display: block;
+    background-color: #07111b;
+    width: 100%;
   }
 
   .admin-sidebar {
