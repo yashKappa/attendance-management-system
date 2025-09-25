@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Teacher.css";
 import TeacherAdd from "./teacherAdd";
-import Error from "../../message/Error"; // will show both errors & success
-import PopUp from "../../message/PopUp";
+import Error from "../../Error/Error";
+import PopUp from "../../Error/PopUp";
 
 export default function Teacher() {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -70,7 +70,7 @@ export default function Teacher() {
   return (
     <div className="teacher-container">
       <h2>Teacher Section</h2>
-      
+
 {/* Error or Success Message */}
 {!showAddForm && message && (
   <Error 
@@ -112,12 +112,7 @@ export default function Teacher() {
                       <td>{teacher.department}</td>
                       <td>{teacher.subject}</td>
                       <td>
-                        <button
-                          className="delete-btn"
-                          onClick={() => confirmDelete(teacher._id)}
-                        >
-                          Delete
-                        </button>
+                        <button className="delete-btn" onClick={() => confirmDelete(teacher._id)} > Delete </button>
                       </td>
                     </tr>
                   ))}
@@ -130,7 +125,6 @@ export default function Teacher() {
         <TeacherAdd fetchTeachers={fetchTeachers} />
       )}
 
-      {/* Floating + Button */}
       <button
         className="fab"
         onClick={() => setShowAddForm(!showAddForm)}
@@ -139,7 +133,6 @@ export default function Teacher() {
         {showAddForm ? "×" : "+"}
       </button>
 
-      {/* PopUp for delete confirmation */}
       {popup.visible && (
         <PopUp
           message="Are you sure you want to delete this teacher?"

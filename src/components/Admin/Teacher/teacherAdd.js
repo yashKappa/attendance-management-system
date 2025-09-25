@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Error from "../../message/Error"; // Use the shared Error component
+import Error from "../../Error/Error"; 
 import "./Teacher.css";
 
 export default function TeacherAdd({ fetchTeachers }) {

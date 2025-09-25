@@ -1,0 +1,219 @@
+.student-container {
+  margin-top: 20px;
+}
+
+.student-form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #dfdede;
+  border-radius: 0.3rem;
+  max-width: 500px;
+  margin: 0 auto; /* center form */
+}
+
+.student-form div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.student-form label {
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.student-form input,
+.student-form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.student-form button {
+  padding: 12px;
+  background: #1c3e5f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.student-form button:hover {
+  background: #07111b;
+}
+
+.generated-ueid {
+  margin-top: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Floating Action Button */
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #1c3e5f;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s, transform 0.2s;
+  z-index: 1000;
+}
+
+.fab:hover {
+  background: #07111b;
+}
+
+
+/* student.css */
+/* Container */
+.student-container {
+  max-width: 100%;
+  margin: 0px 10px 0px 40px;
+  padding: 30px;
+  border-radius: 12px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Heading */
+.student-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  justify-content: end;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.reload-btn {
+  padding: 8px 16px;
+  background-color: #121d44;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.reload-btn:hover {
+  background-color: #142f49;
+}
+
+/* Table wrapper for horizontal scroll */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* student Table */
+.student-table {
+  width: 100%;
+  min-width: 600px; /* minimum width for readability */
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.student-table th,
+.student-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.student-table th {
+  background-color: #042d4e;
+  color: white;
+  font-weight: bold;
+}
+
+.student-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.student-table tbody tr:nth-child(even) {
+  background-color: #fdfdfd;
+}
+
+/* student Add Form */
+.student-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.student-form div {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.student-form input,
+.student-form select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.generated-ueid {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #555;
+}
+
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reload-btn {
+    width: 100%;
+  }
+
+  .student-table {
+    font-size: 14px;
+    min-width: 500px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .student-table {
+    font-size: 12px;
+    min-width: 400px;
+  }
+
+  .student-form input,
+  .student-form select {
+    font-size: 14px;
+  }
+}

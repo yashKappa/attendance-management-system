@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
 import Teacher from "./Teacher/Teacher";
-import Student from "./Student";
-import HOD from "./HOD";
+import Student from "./Student/Student";
+import HOD from "./Hod/Hod";
 import "./Admin.css";
 
 export default function Admin({ onLogout }) {
