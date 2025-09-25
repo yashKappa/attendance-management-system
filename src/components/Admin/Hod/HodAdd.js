@@ -1,7 +1,6 @@
 // src/components/hod/HodAdd.js
 import { useState } from "react";
 import Error from "../../Error/Error";
-import "./Hod.css";
 
 export default function HodAdd({ fetchHods }) {
   const [fullName, setFullName] = useState("");

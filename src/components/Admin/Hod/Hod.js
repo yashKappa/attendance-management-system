@@ -1,6 +1,5 @@
 // src/components/hod/Hod.js
 import { useState, useEffect } from "react";
-import "./Hod.css";
 import HodAdd from "./HodAdd";
 import Error from "../../Error/Error";
 import PopUp from "../../Error/PopUp";

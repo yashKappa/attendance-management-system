@@ -204,6 +204,12 @@
     font-size: 14px;
     min-width: 500px;
   }
+  
+  .teacher-container{
+    width: 100%;
+    margin: 0%;
+    padding: 0%;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -215,5 +221,11 @@
   .teacher-form input,
   .teacher-form select {
     font-size: 14px;
+  }
+  
+  .teacher-container{
+    width: 100%;
+    margin: 0%;
+    padding: 0%;
   }
 }

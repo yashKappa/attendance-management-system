@@ -192,17 +192,24 @@
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
   .controls {
-    flex-direction: column;
-    align-items: flex-start;
+    width: 100%;
+    display: flex;
+    align-items: end;
   }
 
   .reload-btn {
-    width: 100%;
+    width: fit-content;
   }
 
   .student-table {
     font-size: 14px;
-    min-width: 500px;
+    width: 100%;
+  }
+
+  .student-container{
+    width: 100%;
+    margin: 0%;
+    padding: 0%;
   }
 }
 
@@ -216,4 +223,11 @@
   .student-form select {
     font-size: 14px;
   }
+
+  
+  .student-container{
+    width: 1000%;
+    margin: 0%;
+    padding: 0%;
+  } 
 }
