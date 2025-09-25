@@ -1,0 +1,31 @@
+.message-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 250px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.message-container.error {
+  background-color: #f44336; /* red for error */
+}
+
+.message-container.success {
+  background-color: #4caf50; /* green for success */
+}
+
+.message-close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}

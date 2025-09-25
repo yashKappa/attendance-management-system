@@ -24,13 +24,18 @@ export default function AdminLogin({ onLogin }) {
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleLogin}>
+        <div className="logo1">
+        <img src={`${process.env.PUBLIC_URL}/assets/logo1.png`} alt="logo" />
+        </div>
         <h2>Admin Login</h2>
         <label>Username:</label>
         <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         {error && <p className="error">{error}</p>}
-        <button type="submit">Login</button>
+        <div className="login"> 
+             <button type="submit">Login</button>
+        </div>
       </form>
     </div>
   );

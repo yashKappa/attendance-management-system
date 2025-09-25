@@ -14,6 +14,22 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   width: 300px;
+  margin: 30px;
+}
+
+.login{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.logo1{
+    display: flex;
+    justify-content: center;
+}
+
+.logo1 img{
+    width: 100px;
 }
 
 /* Login form title */
@@ -32,6 +48,13 @@
   border: 1px solid #ccc;
 }
 
+.login-form label{
+    display: flex;
+    align-items: baseline;
+    width: 100%;
+    
+}
+
 /* Error message */
 .login-form p.error {
   color: red;
@@ -40,9 +63,9 @@
 
 /* Login button */
 .login-form button {
-  width: 100%;
-  padding: 10px;
-  background: #333;
+  width: fit-content;
+  padding: 10px 20px;
+  background: #113a69;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -50,5 +73,5 @@
 }
 
 .login-form button:hover {
-  background: #555;
+  background: #092341;
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
-import Teacher from "./Teacher";
+import Teacher from "./Teacher/Teacher";
 import Student from "./Student";
 import HOD from "./HOD";
 import "./Admin.css";
@@ -31,23 +31,21 @@ export default function Admin({ onLogout }) {
 
   return (
     <div className="admin-container">
-      {/* Hamburger for mobile */}
       <div className="hamburger" onClick={() => setSidebarOpen(true)}>
         <i className="fa fa-bars"></i>
       </div>
 
-      {/* Overlay */}
       {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)}></div>}
 
       <div className={`admin-sidebar ${sidebarOpen ? "open" : ""}`}>
-        {/* Close button for mobile */}
-        <div className="sidebar-close" onClick={() => setSidebarOpen(false)}>
-          <i className="fa fa-times"></i>
+        <div className="sidebar-close">
+          <i className="fa fa-times" onClick={() => setSidebarOpen(false)}></i>
         </div>
 
-        <div>
-          <h2>MSG-SGKM Admin Panel</h2>
-          <img className="logo" src="logo.png" alt="logo" />
+        <div className="buttons">
+          <div>
+            <h2>MSG-SGKM Admin Panel</h2>
+          <img className="logo" src={`${process.env.PUBLIC_URL}/assets/logo.png`} alt="logo" />
           <ul>
             {menuItems.map((item) => (
               <li
@@ -60,9 +58,10 @@ export default function Admin({ onLogout }) {
               </li>
             ))}
           </ul>
-        </div>
+          </div>
 
-        <button className="admin-logout-btn" onClick={handleLogout}>Logout</button>
+        <button className="admin-logout-btn" onClick={handleLogout}>Logout <i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
       </div>
 
       <div className="admin-main">{renderSection()}</div>
