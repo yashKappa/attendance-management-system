@@ -250,6 +250,67 @@ io.on("connection", (socket) => {
 });
 
 
+/*********************** Teacher Login ********************/
+app.post("/api/teachers/login", async (req, res) => {
+  try {
+    const { ueid, password } = req.body;
+
+    // Find teacher by UEID
+    const teacher = await Teacher.findOne({ ueid });
+    if (!teacher) {
+      return res.status(401).json({ success: false, message: "UEID not found" });
+    }
+
+    // Check password
+    if (teacher.password !== password) {
+      return res.status(401).json({ success: false, message: "Wrong password" });
+    }
+
+    // Create a simple token (for demo, just use UEID)
+    const token = teacher.ueid;
+
+    res.json({ success: true, token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+/*********************** Teacher data fetching ********************/
+app.get("/api/teachers/verify/:token", async (req, res) => {
+  try {
+    const token = req.params.token;
+    const teacher = await Teacher.findOne({ token }); // store token during login
+    if (!teacher) return res.json({ success: false, message: "Invalid token" });
+
+    res.json({ success: true, teacher });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+app.get("/api/student", async (req, res) => {
+  try {
+    const { department } = req.query;
+    const students = await Student.find({ department });
+    res.json(students);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// GET /api/teachers/:ueid
+app.get("/api/teachers/:ueid", async (req, res) => {
+  try {
+    const teacher = await Teacher.findOne({ ueid: req.params.ueid });
+    if (!teacher) return res.json({ success: false, message: "Teacher not found" });
+    res.json({ success: true, teacher });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+
 const PORT = 5000;
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);

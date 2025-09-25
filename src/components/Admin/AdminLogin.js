@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
 import "./AdminLogin.css";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function AdminLogin({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -36,6 +37,14 @@ export default function AdminLogin({ onLogin }) {
         <div className="login"> 
              <button type="submit">Login</button>
         </div>
+       <p className="login-link">
+                           <Link to="/teacher-login">
+                               <button>Teacher Login</button>
+                           </Link>
+                           <Link to="/">
+                               <button>Student Login</button>
+                           </Link>
+                       </p>
       </form>
     </div>
   );

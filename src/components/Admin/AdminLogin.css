@@ -1,20 +1,21 @@
-/* Login page container */
+
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #f4f4f4;
+  height: 90vh;
 }
 
 /* Login form */
 .login-form {
-  background: #fff;
+  background: #ecebeb;
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   width: 300px;
   margin: 30px;
+  border: 1px solid gray;
 }
 
 .login{
@@ -74,4 +75,18 @@
 
 .login-form button:hover {
   background: #092341;
+}
+
+.login-link{
+    justify-content: space-between;
+    display: flex;
+}
+
+.login-link Link{
+    background-color: #fff;
+    color: #fff;
+}
+
+.login-link button{
+    color: #fff;
 }

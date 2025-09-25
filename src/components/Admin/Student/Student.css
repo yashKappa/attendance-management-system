@@ -188,6 +188,19 @@
   color: #555;
 }
 
+.delete-btn{
+    background-color: #d60000;
+    color: white;
+    border: 1px solid gray;
+    border-radius: 0.3rem;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.delete-btn:hover{
+    background-color: #a50909;
+}
 
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {

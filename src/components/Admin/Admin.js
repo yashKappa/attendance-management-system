@@ -2,7 +2,7 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import Teacher from "./Teacher/Teacher";
 import Student from "./Student/Student";
-import HOD from "./Hod/Hod";
+import Hod from "./Hod/Hod";
 import "./Admin.css";
 
 export default function Admin({ onLogout }) {
@@ -13,7 +13,7 @@ export default function Admin({ onLogout }) {
     switch (activeSection) {
       case "Teacher": return <Teacher />;
       case "Student": return <Student />;
-      case "HOD": return <HOD />;
+      case "Hod": return <Hod />;
       default: return <Teacher />;
     }
   };
