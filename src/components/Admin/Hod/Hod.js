@@ -77,22 +77,27 @@ export default function Hod() {
             <button className="reload-btn" onClick={fetchHods}>⟳ Reload</button>
           </div>
 
-          {loading && <p>Loading HODs...</p>}
-          {!loading && hods.length === 0 && <p>No HOD found.</p>}
-
-          {!loading && hods.length > 0 && (
-            <div className="table-responsive">
-              <table className="student-table">
-                <thead>
+          <div className="table-responsive">
+            <table className="student-table">
+              <thead>
+                <tr>
+                  <th>UEID</th>
+                  <th>Full Name</th>
+                  <th>Password</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
                   <tr>
-                    <th>UEID</th>
-                    <th>Full Name</th>
-                    <th>Password</th>
-                    <th>Actions</th>
+                    <td colSpan="4" style={{ textAlign: "center" }}>Loading HODs...</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {hods.map((h) => (
+                ) : hods.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" style={{ textAlign: "center" }}>No HOD found</td>
+                  </tr>
+                ) : (
+                  hods.map((h) => (
                     <tr key={h._id}>
                       <td>{h.ueid}</td>
                       <td>{h.fullName}</td>
@@ -101,11 +106,11 @@ export default function Hod() {
                         <button className="delete-btn" onClick={() => confirmDelete(h._id)}>Delete</button>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </>
       ) : (
         <HodAdd fetchHods={fetchHods} />

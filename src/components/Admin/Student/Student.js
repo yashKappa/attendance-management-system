@@ -9,7 +9,7 @@ export default function Student() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(null); // can be error or success
+  const [message, setMessage] = useState(null);
   const [popup, setPopup] = useState({ visible: false, studentId: null });
 
   // Fetch all students
@@ -45,10 +45,7 @@ export default function Student() {
         throw new Error(errorData.message || "Failed to delete student");
       }
 
-      // Remove student from state
       setStudents((prev) => prev.filter((s) => s._id !== id));
-
-      // Show success message
       setMessage({ text: "Student deleted successfully!", type: "success" });
       setTimeout(() => setMessage(null), 5000);
 
@@ -61,13 +58,8 @@ export default function Student() {
     }
   };
 
-  const confirmDelete = (id) => {
-    setPopup({ visible: true, studentId: id });
-  };
-
-  const cancelDelete = () => {
-    setPopup({ visible: false, studentId: null });
-  };
+  const confirmDelete = (id) => setPopup({ visible: true, studentId: id });
+  const cancelDelete = () => setPopup({ visible: false, studentId: null });
 
   useEffect(() => {
     fetchStudent();
@@ -94,24 +86,28 @@ export default function Student() {
             </button>
           </div>
 
-          {loading && <p>Loading students...</p>}
-
-          {!loading && students.length === 0 && <p>No students found.</p>}
-
-          {!loading && students.length > 0 && (
-            <div className="table-responsive">
-              <table className="student-table">
-                <thead>
+          <div className="table-responsive">
+            <table className="student-table">
+              <thead>
+                <tr>
+                  <th>UEID</th>
+                  <th>Full Name</th>
+                  <th>Course</th>
+                  <th>Email</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
                   <tr>
-                    <th>UEID</th>
-                    <th>Full Name</th>
-                    <th>Course</th>
-                    <th>Email</th>
-                    <th>Actions</th>
+                    <td colSpan="5" style={{ textAlign: "center" }}>Loading students...</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {students.map((s) => (
+                ) : students.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: "center" }}>No students found</td>
+                  </tr>
+                ) : (
+                  students.map((s) => (
                     <tr key={s._id}>
                       <td>{s.ueid}</td>
                       <td>{s.fullName}</td>
@@ -123,11 +119,11 @@ export default function Student() {
                         </button>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </>
       ) : (
         <StudentAdd fetchStudent={fetchStudent} />

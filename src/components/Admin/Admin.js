@@ -26,7 +26,7 @@ export default function Admin({ onLogout }) {
   const menuItems = [
     { name: "Teacher", icon: "fa-solid fa-chalkboard-teacher" },
     { name: "Student", icon: "fa-solid fa-user-graduate" },
-    { name: "HOD", icon: "fa-solid fa-user-tie" },
+    { name: "Hod", icon: "fa-solid fa-user-tie" },
   ];
 
   return (

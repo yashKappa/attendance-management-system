@@ -1,4 +1,12 @@
 
+*{
+  margin: 0%;
+}
+
+::-webkit-scrollbar{
+  overflow: hidden;
+}
+
 
 .admin-container {
   display: flex;

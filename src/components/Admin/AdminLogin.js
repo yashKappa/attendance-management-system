@@ -8,6 +8,8 @@ export default function AdminLogin({ onLogin }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   const ADMIN_USERNAME = "MSG-SGKM-ADMIN";
   const ADMIN_PASSWORD = "admin123";
 
@@ -15,8 +17,14 @@ export default function AdminLogin({ onLogin }) {
     e.preventDefault();
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       setError("");
+      // save cookie for persistence
       Cookies.set("adminLoggedIn", "true", { expires: 1 });
-      onLogin();
+
+      // update state if provided
+      if (onLogin) onLogin();
+
+      // redirect to admin dashboard
+      navigate("/admin");
     } else {
       setError("Invalid username or password");
     }
@@ -26,25 +34,36 @@ export default function AdminLogin({ onLogin }) {
     <div className="login-container">
       <form className="login-form" onSubmit={handleLogin}>
         <div className="logo1">
-        <img src={`${process.env.PUBLIC_URL}/assets/logo1.png`} alt="logo" />
+          <img src={`${process.env.PUBLIC_URL}/assets/logo1.png`} alt="logo" />
         </div>
         <h2>Admin Login</h2>
         <label>Username:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
         <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         {error && <p className="error">{error}</p>}
-        <div className="login"> 
-             <button type="submit">Login</button>
+        <div className="login">
+          <button type="submit">Login</button>
         </div>
-       <p className="login-link">
-                           <Link to="/teacher-login">
-                               <button>Teacher Login</button>
-                           </Link>
-                           <Link to="/">
-                               <button>Student Login</button>
-                           </Link>
-                       </p>
+
+        <p className="login-link">
+          <Link to="/teacher-login">
+            <button type="button">Teacher Login</button>
+          </Link>
+          <Link to="/hod-login">
+            <button type="button">Hod Login</button>
+          </Link>
+        </p>
       </form>
     </div>
   );

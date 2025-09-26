@@ -1,5 +1,4 @@
 {
-  "homepage": "https://yashkappa.github.io/attendance-management-system/",
   "name": "attendance-management-system",
   "version": "0.1.0",
   "private": true,
@@ -19,6 +18,7 @@
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.2",
     "react-scripts": "5.0.1",
+    "recharts": "^3.2.1",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"

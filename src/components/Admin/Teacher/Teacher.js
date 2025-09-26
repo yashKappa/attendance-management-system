@@ -8,7 +8,7 @@ export default function Teacher() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(null); // can be error or success
+  const [message, setMessage] = useState(null);
   const [popup, setPopup] = useState({ visible: false, teacherId: null });
 
   const fetchTeachers = async () => {
@@ -42,10 +42,7 @@ export default function Teacher() {
         throw new Error(errorData.message || "Failed to delete teacher");
       }
 
-      // Remove teacher immediately from state
       setTeachers((prev) => prev.filter((t) => t._id !== id));
-
-      // Show success message
       setMessage("Teacher deleted successfully!");
     } catch (err) {
       console.error(err);
@@ -55,13 +52,8 @@ export default function Teacher() {
     }
   };
 
-  const confirmDelete = (id) => {
-    setPopup({ visible: true, teacherId: id });
-  };
-
-  const cancelDelete = () => {
-    setPopup({ visible: false, teacherId: null });
-  };
+  const confirmDelete = (id) => setPopup({ visible: true, teacherId: id });
+  const cancelDelete = () => setPopup({ visible: false, teacherId: null });
 
   useEffect(() => {
     fetchTeachers();
@@ -71,14 +63,14 @@ export default function Teacher() {
     <div className="teacher-container">
       <h2>Teacher Section</h2>
 
-{/* Error or Success Message */}
-{!showAddForm && message && (
-  <Error 
-    message={message} 
-    type={message.includes("successfully") ? "success" : "error"} 
-    onClose={() => setMessage(null)} 
-  />
-)}
+      {/* Error or Success Message */}
+      {!showAddForm && message && (
+        <Error 
+          message={message} 
+          type={message.includes("successfully") ? "success" : "error"} 
+          onClose={() => setMessage(null)} 
+        />
+      )}
 
       {!showAddForm ? (
         <>
@@ -88,38 +80,44 @@ export default function Teacher() {
             </button>
           </div>
 
-          {loading && <p>Loading teachers...</p>}
-
-          {!loading && teachers.length === 0 && <p>No teachers found.</p>}
-
-          {!loading && teachers.length > 0 && (
-            <div className="table-responsive">
-              <table className="teacher-table">
-                <thead>
+          <div className="table-responsive">
+            <table className="teacher-table">
+              <thead>
+                <tr>
+                  <th>UEID</th>
+                  <th>Full Name</th>
+                  <th>Department</th>
+                  <th>Subject</th>
+                  <th>Password</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
                   <tr>
-                    <th>UEID</th>
-                    <th>Full Name</th>
-                    <th>Department</th>
-                    <th>Subject</th>
-                    <th>Actions</th>
+                    <td colSpan="6" style={{ textAlign: "center" }}>Loading teachers...</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {teachers.map((teacher) => (
+                ) : teachers.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: "center" }}>No teachers found</td>
+                  </tr>
+                ) : (
+                  teachers.map((teacher) => (
                     <tr key={teacher._id}>
                       <td>{teacher.ueid}</td>
                       <td>{teacher.fullName}</td>
                       <td>{teacher.department}</td>
                       <td>{teacher.subject}</td>
+                      <td>{teacher.password}</td>
                       <td>
-                        <button className="delete-btn" onClick={() => confirmDelete(teacher._id)} > Delete </button>
+                        <button className="delete-btn" onClick={() => confirmDelete(teacher._id)}>Delete</button>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </>
       ) : (
         <TeacherAdd fetchTeachers={fetchTeachers} />
