@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/attendance-management-system/static/css/main.03e8e82c.css",
-    "main.js": "/attendance-management-system/static/js/main.a38e9764.js",
-    "index.html": "/attendance-management-system/index.html",
-    "main.03e8e82c.css.map": "/attendance-management-system/static/css/main.03e8e82c.css.map",
-    "main.a38e9764.js.map": "/attendance-management-system/static/js/main.a38e9764.js.map"
+    "main.css": "/static/css/main.c168424a.css",
+    "main.js": "/static/js/main.e68b4891.js",
+    "index.html": "/index.html",
+    "main.c168424a.css.map": "/static/css/main.c168424a.css.map",
+    "main.e68b4891.js.map": "/static/js/main.e68b4891.js.map"
   },
   "entrypoints": [
-    "static/css/main.03e8e82c.css",
-    "static/js/main.a38e9764.js"
+    "static/css/main.c168424a.css",
+    "static/js/main.e68b4891.js"
   ]
 }
