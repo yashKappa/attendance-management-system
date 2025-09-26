@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import HodTeach from "./Hodteach";
 import HodStud from "./Hodstud";
@@ -7,6 +8,7 @@ import HodForm from "./Hodform";
 export default function HodDash({ onLogout }) {
   const [activeSection, setActiveSection] = useState("Details");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const renderSection = () => {
     switch (activeSection) {
@@ -22,9 +24,12 @@ export default function HodDash({ onLogout }) {
     }
   };
 
-  const handleLogout = () => {
+ const handleLogout = () => {
     Cookies.remove("hodToken");
+
     if (onLogout) onLogout();
+
+    navigate("/hod-login");
   };
 
   const menuItems = [

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 import Teacher from "./Teacher/Teacher";
 import Student from "./Student/Student";
 import Hod from "./Hod/Hod";
@@ -8,6 +9,8 @@ import "./Admin.css";
 export default function Admin({ onLogout }) {
   const [activeSection, setActiveSection] = useState("Teacher");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+
 
   const renderSection = () => {
     switch (activeSection) {
@@ -21,6 +24,8 @@ export default function Admin({ onLogout }) {
   const handleLogout = () => {
     Cookies.remove("adminLoggedIn");
     if (onLogout) onLogout();
+    navigate("/admin-login");
+
   };
 
   const menuItems = [

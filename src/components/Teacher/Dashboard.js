@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 import Data from "./Data";
 import Student from "./Student";
 import "./TeacherPanel.css";
@@ -7,6 +8,7 @@ import "./TeacherPanel.css";
 export default function TeacherPanel({ onLogout }) {
   const [activeSection, setActiveSection] = useState("Data");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const renderSection = () => {
     switch (activeSection) {
@@ -19,6 +21,8 @@ export default function TeacherPanel({ onLogout }) {
   const handleLogout = () => {
     Cookies.remove("teacherToken");
     if (onLogout) onLogout();
+    navigate("/teacher-login");
+
   };
 
   const menuItems = [

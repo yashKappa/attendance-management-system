@@ -43,18 +43,10 @@
 .login-form input {
   width: 100%;
   padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 15px;
   border-radius: 5px;
   border: 1px solid #ccc;
 }
 
-.login-form label{
-    display: flex;
-    align-items: baseline;
-    width: 100%;
-    
-}
 
 /* Error message */
 .login-form p.error {
@@ -80,6 +72,7 @@
 .login-link{
     justify-content: space-between;
     display: flex;
+    margin-top: 1.5rem;
 }
 
 .login-link Link{
