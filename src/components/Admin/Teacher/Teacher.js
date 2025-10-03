@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./Teacher.css";
 import TeacherAdd from "./teacherAdd";
 import Error from "../../Error/Error";
@@ -11,6 +11,11 @@ export default function Teacher() {
   const [message, setMessage] = useState(null);
   const [popup, setPopup] = useState({ visible: false, teacherId: null });
 
+  const [departments, setDepartments] = useState([]);
+  const [activeDept, setActiveDept] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Fetch all teachers
   const fetchTeachers = async () => {
     setLoading(true);
     setMessage(null);
@@ -19,6 +24,11 @@ export default function Teacher() {
       if (!response.ok) throw new Error("Failed to fetch teachers");
       const data = await response.json();
       setTeachers(data);
+
+      // Extract unique departments
+      const depts = ["All", ...new Set(data.map((t) => t.department?.trim()))];
+      setDepartments(depts);
+
     } catch (err) {
       console.error(err);
       setMessage(err.message);
@@ -28,6 +38,7 @@ export default function Teacher() {
     }
   };
 
+  // Delete teacher
   const deleteTeacher = async (id) => {
     try {
       if (!id) return;
@@ -44,9 +55,12 @@ export default function Teacher() {
 
       setTeachers((prev) => prev.filter((t) => t._id !== id));
       setMessage("Teacher deleted successfully!");
+      setTimeout(() => setMessage(null), 5000);
+
     } catch (err) {
       console.error(err);
       setMessage(err.message);
+      setTimeout(() => setMessage(null), 5000);
     } finally {
       setPopup({ visible: false, teacherId: null });
     }
@@ -59,8 +73,29 @@ export default function Teacher() {
     fetchTeachers();
   }, []);
 
+  // Filtered teachers based on department and search
+  const filteredTeachers = useMemo(() => {
+    let temp = [...teachers];
+
+    if (activeDept !== "All") {
+      temp = temp.filter((t) => t.department === activeDept);
+    }
+
+    if (searchTerm.trim() !== "") {
+      const term = searchTerm.toLowerCase();
+      temp = temp.filter(
+        (t) =>
+          t.fullName?.toLowerCase().includes(term) ||
+          t.ueid?.toLowerCase().includes(term) ||
+          t.subject?.toLowerCase().includes(term)
+      );
+    }
+
+    return temp;
+  }, [teachers, activeDept, searchTerm]);
+
   return (
-    <div className="teacher-container">
+    <div className="student-container">
       <h2>Teacher Section</h2>
 
       {/* Error or Success Message */}
@@ -80,6 +115,31 @@ export default function Teacher() {
             </button>
           </div>
 
+          <div className="search">
+        <div className="filter-buttons">
+         <div>
+             {departments.map((dept) => (
+            <button
+              key={dept}
+              className={activeDept === dept ? "active" : ""}
+              onClick={() => setActiveDept(dept)}
+            >
+              {dept}
+            </button>
+          ))}
+         </div>
+
+       <div className="filter">
+         <input
+          type="text"
+          placeholder="Search by name, UEID or email..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+       </div>
+         </div>
+      </div>
+
           <div className="table-responsive">
             <table className="teacher-table">
               <thead>
@@ -97,12 +157,12 @@ export default function Teacher() {
                   <tr>
                     <td colSpan="6" style={{ textAlign: "center" }}>Loading teachers...</td>
                   </tr>
-                ) : teachers.length === 0 ? (
+                ) : filteredTeachers.length === 0 ? (
                   <tr>
                     <td colSpan="6" style={{ textAlign: "center" }}>No teachers found</td>
                   </tr>
                 ) : (
-                  teachers.map((teacher) => (
+                  filteredTeachers.map((teacher) => (
                     <tr key={teacher._id}>
                       <td>{teacher.ueid}</td>
                       <td>{teacher.fullName}</td>

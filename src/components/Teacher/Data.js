@@ -3,38 +3,96 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export default function HodForms() {
-  const [forms, setForms] = useState([]);
+  const [forms, setForms] = useState([]); // full fetched data
+  const [filteredForms, setFilteredForms] = useState([]); // filtered data for table
   const [loading, setLoading] = useState(true);
+  const [ueidSearch, setUeidSearch] = useState(""); // server-side UEID search
+  const [tableSearch, setTableSearch] = useState(""); // client-side table filter
 
+  // Fetch function (server-side)
+  const fetchHodForms = async (ueid) => {
+    if (!ueid) {
+      setForms([]);
+      setFilteredForms([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/hodforms?ueid=${ueid}`
+      );
+      const data = Array.isArray(response.data) ? response.data : [];
+      setForms(data);
+      setFilteredForms(data);
+    } catch (err) {
+      console.error("Error fetching HOD forms:", err);
+      setForms([]);
+      setFilteredForms([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // On mount → load UEID from cookie
   useEffect(() => {
-    const fetchHodForms = async () => {
-      setLoading(true);
-
-      const ueid = Cookies.get("teacherToken"); // Read UEID from cookie
-      if (!ueid) {
-        console.warn("UEID not found in cookies");
-        setForms([]);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await axios.get(`http://localhost:5000/api/hodforms?ueid=${ueid}`);
-        setForms(Array.isArray(response.data) ? response.data : []);
-      } catch (err) {
-        console.error("Error fetching HOD forms:", err);
-        setForms([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchHodForms();
+    const cookieUEID = Cookies.get("teacherToken");
+    if (cookieUEID) {
+      setUeidSearch(cookieUEID);
+      fetchHodForms(cookieUEID);
+    } else {
+      setLoading(false);
+    }
   }, []);
+
+  // Dynamically fetch from server when UEID search changes (debounced)
+  useEffect(() => {
+    if (ueidSearch.trim() === "") {
+      setForms([]);
+      setFilteredForms([]);
+      return;
+    }
+
+    const delay = setTimeout(() => {
+      fetchHodForms(ueidSearch);
+    }, 500); // debounce 500ms
+
+    return () => clearTimeout(delay);
+  }, [ueidSearch]);
+
+  // Client-side table filter
+  useEffect(() => {
+    const search = tableSearch.toLowerCase();
+    const filtered = forms.filter((form) =>
+      form.ueid.toLowerCase().includes(search) ||
+      (form.notes && form.notes.toLowerCase().includes(search)) ||
+      (form.time && form.time.toLowerCase().includes(search))
+    );
+    setFilteredForms(filtered);
+  }, [tableSearch, forms]);
 
   return (
     <div className="student-container">
-      <h2>HOD Form Submissions</h2>
+      <h2>Message</h2>
+
+      <div className="search">
+        <input
+          type="text"
+          placeholder="Fetch by UEID"
+          value={ueidSearch}
+          onChange={(e) => setUeidSearch(e.target.value)}
+          style={{ padding: "8px", width: "250px" }}
+        />
+        <input
+          type="text"
+          placeholder="Search table"
+          value={tableSearch}
+          onChange={(e) => setTableSearch(e.target.value)}
+          style={{ padding: "8px", width: "250px" }}
+        />
+      </div>
+
       <div className="table-responsive">
         <table className="student-table">
           <thead>
@@ -42,7 +100,7 @@ export default function HodForms() {
               <th>UEID</th>
               <th>Time</th>
               <th>Notes</th>
-              <th>Weekly Days</th>
+              <th>Days</th>
               <th>Submitted At</th>
             </tr>
           </thead>
@@ -53,14 +111,14 @@ export default function HodForms() {
                   Loading HOD forms...
                 </td>
               </tr>
-            ) : forms.length === 0 ? (
+            ) : filteredForms.length === 0 ? (
               <tr>
                 <td colSpan="5" style={{ textAlign: "center", padding: "10px" }}>
                   No data found
                 </td>
               </tr>
             ) : (
-              forms.map((form) => (
+              filteredForms.map((form) => (
                 <tr key={form._id}>
                   <td>{form.ueid}</td>
                   <td>{form.time}</td>

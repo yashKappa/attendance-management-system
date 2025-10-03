@@ -12,50 +12,59 @@ export default function Student() {
   const [success, setSuccess] = useState(null);
   const [searchQuery, setSearchQuery] = useState(""); // search by name/email/department
   const [teacherUEIDFilter, setTeacherUEIDFilter] = useState(""); // filter by another teacher's UEID
-
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [teacherSubjects, setTeacherSubjects] = useState(""); // new state
 
   const fetchStudents = async (ueid = null) => {
-    try {
-      setLoading(true);
-      const currentTeacherUEID = Cookies.get("teacherToken");
-      if (!currentTeacherUEID) throw new Error("Teacher not logged in");
+  try {
+    setLoading(true);
+    const currentTeacherUEID = Cookies.get("teacherToken");
+    if (!currentTeacherUEID) throw new Error("Teacher not logged in");
 
-      const targetUEID = ueid || currentTeacherUEID;
+    // Pick target UEID: either from filter or current teacher
+    const targetUEID = ueid || currentTeacherUEID;
 
-      const teacherRes = await axios.get(
-        `http://localhost:5000/api/teachers/${targetUEID}`
-      );
-      const teacher = teacherRes.data.teacher;
-      if (!teacher) throw new Error("Teacher not found");
+    // Fetch teacher details by target UEID
+    const teacherRes = await axios.get(
+      `http://localhost:5000/api/teachers/${targetUEID}`
+    );
+    const teacher = teacherRes.data.teacher;
+    if (!teacher) throw new Error("Teacher not found");
 
-      // Save teacher's subjects (cluster subject)
-      setTeacherSubjects(teacher.subject || "N/A");
+    // ✅ Always update selectedTeacher (important for filtered case too)
+    setSelectedTeacher(teacher);
 
-      const studentsRes = await axios.get("http://localhost:5000/api/student");
-      const allStudents = studentsRes.data;
+    // Save teacher’s subject
+    setTeacherSubjects(teacher.subject || "N/A");
 
-      const matchedStudents = allStudents.filter(
-        (s) => s.department === teacher.department
-      );
+    // Fetch all students
+    const studentsRes = await axios.get("http://localhost:5000/api/student");
+    const allStudents = studentsRes.data;
 
-      setStudents(matchedStudents);
+    // Match only students in this teacher’s department
+    const matchedStudents = allStudents.filter(
+      (s) => s.department === teacher.department
+    );
 
-      const initialAttendance = {};
-      matchedStudents.forEach((s) => {
-        initialAttendance[s._id] = { present: false, absent: false };
-      });
-      setAttendance(initialAttendance);
-      setError(null);
-    } catch (err) {
-      console.error(err);
-      setError(err.message);
-      setStudents([]);
-      setTeacherSubjects("");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setStudents(matchedStudents);
+
+    // Reset attendance state
+    const initialAttendance = {};
+    matchedStudents.forEach((s) => {
+      initialAttendance[s._id] = { present: false, absent: false };
+    });
+    setAttendance(initialAttendance);
+    setError(null);
+  } catch (err) {
+    console.error(err);
+    setError(err.message);
+    setStudents([]);
+    setTeacherSubjects("");
+    setSelectedTeacher(null);
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   useEffect(() => {
@@ -83,19 +92,12 @@ const handleSubmitAttendance = async () => {
       }
     }
 
-    const currentTeacherUEID = Cookies.get("teacherToken");
-    if (!currentTeacherUEID) throw new Error("Teacher not logged in");
-
-    const teacherRes = await axios.get(
-      `http://localhost:5000/api/teachers/${currentTeacherUEID}`
-    );
-    const teacher = teacherRes.data.teacher;
-    if (!teacher) throw new Error("Teacher not found");
+    if (!selectedTeacher) throw new Error("Teacher not found");
 
     // Get current date, day, and time
     const now = new Date();
     const date = now.toLocaleDateString();
-    const day = now.toLocaleDateString('en-US', { weekday: 'long' });
+    const day = now.toLocaleDateString("en-US", { weekday: "long" });
     const time = now.toLocaleTimeString();
 
     const records = students.map((s) => ({
@@ -103,9 +105,9 @@ const handleSubmitAttendance = async () => {
       fullName: s.fullName,
       email: s.email,
       department: s.department,
-      subject: teacher.subject || "N/A",
+      subject: selectedTeacher.subject || "N/A",   // ✅ use selectedTeacher
       status: attendance[s._id].present ? "present" : "absent",
-      teacherUEID: teacher.UEID, // <-- include teacher's UEID
+      teacherUEID: selectedTeacher.UEID,           // ✅ use selectedTeacher
       date,
       day,
       time,
@@ -113,7 +115,7 @@ const handleSubmitAttendance = async () => {
 
     const response = await axios.post(
       "http://localhost:5000/api/attendance/save",
-      { records, teacherId: teacher._id }
+      { records, teacherId: selectedTeacher._id }   // ✅ correct teacherId
     );
 
     if (response.data.success) {
@@ -151,7 +153,7 @@ const handleSubmitAttendance = async () => {
 
   return (
     <div className="student-container">
-      <h2>Students in Department</h2>
+      <h2>Students Attendance</h2>
 
       <Error message={error} type="error" onClose={() => setError(null)} />
       <Error message={success} type="success" onClose={() => setSuccess(null)} />
@@ -181,7 +183,7 @@ const handleSubmitAttendance = async () => {
             <tr>
               <th>#</th>
               <th>Full Name</th>
-              <th>Subject</th> {/* New column */}
+              <th>Subject</th> 
               <th>Department</th>
               <th>Email</th>
               <th>Present</th>

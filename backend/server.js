@@ -4,7 +4,6 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const http = require("http");
 const { Server } = require("socket.io");
-const router = express.Router();
 
 
 const app = express();
@@ -64,9 +63,9 @@ const attendanceSchema = new mongoose.Schema({
   status: { type: String, enum: ["present", "absent"], required: true },
   teacherId: { type: mongoose.Schema.Types.ObjectId, ref: "Teacher", required: true },
   teacherUEID: { type: String },
-  date: { type: String },   // e.g., "2025-09-26"
-  day: { type: String },    // e.g., "Friday"
-  time: { type: String },   // e.g., "05:30 PM"
+  date: { type: String },   
+  day: { type: String },    
+  time: { type: String },  
 }, { timestamps: true });
 
 const StudentAttendance = mongoose.model("StudentAttendance", attendanceSchema);
@@ -98,7 +97,7 @@ app.get("/api/teachers/:ueid", async (req, res) => {
   }
 });
 
-// Teacher Login
+// -------------------- Teacher Login ------------------
 app.post("/api/teachers/login", async (req, res) => {
   try {
     const { ueid, password } = req.body;
@@ -112,14 +111,13 @@ app.post("/api/teachers/login", async (req, res) => {
       return res.status(401).json({ success: false, message: "Wrong password" });
     }
 
-    // ✅ use UEID as token (simple demo)
     res.json({ success: true, token: teacher.ueid });
   } catch (err) {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// Verify Teacher Token
+// ---------------- Verify Teacher Token ------------------
 app.get("/api/teachers/verify/:token", async (req, res) => {
   try {
     const teacher = await Teacher.findOne({ ueid: req.params.token }); // ✅ fixed
@@ -186,13 +184,13 @@ app.post("/api/attendance/save", async (req, res) => {
       records.map((r) =>
         StudentAttendance.create({
           studentId: r.studentId,
-          fullName: r.fullName,       // student full name
-          email: r.email,             // student email
-          department: r.department,   // student department
-          subject: r.subject,         // teacher subject
+          fullName: r.fullName,       
+          email: r.email,             
+          department: r.department,   
+          subject: r.subject,         
           status: r.status,
           teacherId,
-          teacherUEID: r.teacherUEID, // teacher UEID
+          teacherUEID: r.teacherUEID, 
           date: r.date,
           day: r.day,
           time: r.time,
@@ -245,18 +243,15 @@ app.post("/api/hods/login", async (req, res) => {
   try {
     const { ueid, password } = req.body;
 
-    // Find HOD by UEID
     const hod = await Hod.findOne({ ueid });
     if (!hod) {
       return res.status(401).json({ success: false, message: "UEID not found" });
     }
 
-    // Check password
     if (hod.password !== password) {
       return res.status(401).json({ success: false, message: "Wrong password" });
     }
 
-    // Use UEID as token (simple demo, you can replace with JWT)
     res.json({ success: true, token: hod.ueid });
   } catch (err) {
     console.error(err);
@@ -264,7 +259,7 @@ app.post("/api/hods/login", async (req, res) => {
   }
 });
 
-// Optional: Verify HOD Token
+// -------------------- Optional: Verify HOD Token --------------------
 app.get("/api/hods/verify/:token", async (req, res) => {
   try {
     const hod = await Hod.findOne({ ueid: req.params.token });
@@ -278,22 +273,22 @@ app.get("/api/hods/verify/:token", async (req, res) => {
 
 // ---------------- Hod teacher Form ---------------
 
-// Updated HOD Form Schema
 const hodFormSchema = new mongoose.Schema({
   ueid: { type: String, required: true },
   time: { type: String, required: true },
   notes: { type: String, required: true },
-  days: { type: [String], required: true }, // Array of selected weekdays
+  days: { type: [String], required: true }, 
+  expireAt: { type: Date, default: Date.now, expires: 60 }, // TTL = 1 min
 }, { timestamps: true });
 
 const HodForm = mongoose.model("HodForm", hodFormSchema);
+HodForm.createIndexes();
 
-// HOD Form submission route
+//------------------ HOD Form submission route --------------------
 app.post("/api/hodform", async (req, res) => {
   try {
     const { ueid, time, notes, days } = req.body;
 
-    // Validation
     if (!ueid || !time || !notes || !days || days.length === 0) {
       return res.status(400).json({ success: false, message: "All fields including weekly days are required" });
     }
@@ -312,7 +307,7 @@ app.post("/api/hodform", async (req, res) => {
 
 app.get("/api/hodforms", async (req, res) => {
   try {
-    const { ueid } = req.query; // get UEID from query param
+    const { ueid } = req.query; 
     const filter = ueid ? { ueid } : {};
     const forms = await HodForm.find(filter).sort({ createdAt: -1 });
     res.json(forms);
@@ -322,7 +317,7 @@ app.get("/api/hodforms", async (req, res) => {
   }
 });
 
-// Delete a student
+// ------------------ Delete a student ---------------------
 app.delete("/api/student/:id", async (req, res) => {
   try {
     const deleted = await Student.findByIdAndDelete(req.params.id);
@@ -344,7 +339,7 @@ app.delete("/api/hod/:id", async (req, res) => {
 });
 
 
-// Delete a teacher by ID
+// ------------------- Delete a teacher by ID -------------------
 app.delete("/api/teachers/:id", async (req, res) => {
   try {
     const deleted = await Teacher.findByIdAndDelete(req.params.id);
@@ -354,6 +349,184 @@ app.delete("/api/teachers/:id", async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 });
+
+
+// ----------- GET all attendance records with teacher name ----------------
+app.get("/api/studentAttendance", async (req, res) => {
+  try {
+    const records = await StudentAttendance.find()
+      .populate("teacherId", "fullName ueid") 
+      .populate("studentId", "ueid fullName email department"); 
+
+    const data = records.map((r) => ({
+      _id: r._id,
+      fullName: r.fullName,
+      email: r.email,
+      ueid: r.studentId?.ueid,
+      department: r.department,
+      subject: r.subject,
+      status: r.status,
+      teacherName: r.teacherId?.fullName,
+      teacherUEID: r.teacherUEID,
+      date: r.date,
+      day: r.day,
+      time: r.time,
+    }));
+
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+//----------------- Student Login -----------------
+
+app.post("/api/student/login", async (req, res) => {
+  try {
+    const { ueid, password } = req.body;
+    const student = await Student.findOne({ ueid });
+
+    if (!student) {
+      return res.json({ success: false, message: "Student not found" });
+    }
+
+    if (student.password !== password) {
+      return res.json({ success: false, message: "Invalid credentials" });
+    }
+
+    res.json({ success: true, token: student.ueid });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+    
+  }
+});
+
+//-------------- store All student Notify ------------------
+
+const studentNotifySchema = new mongoose.Schema({
+  department: { type: String, required: true }, 
+  ueid: { type: String, default: "" }, 
+  message: { type: String, required: true },
+  date: { type: String }, 
+  day: { type: String }, 
+  time: { type: String },
+  expireAt: { type: Date, default: Date.now, expires: 60 }, 
+}, { timestamps: true });
+
+const StudentNotify = mongoose.model("StudentNotify", studentNotifySchema);
+StudentNotify.createIndexes();
+
+
+app.post("/api/studentNotify", async (req, res) => {
+  try {
+    const { department, ueid, message } = req.body;
+    if (!department || !message) {
+      return res.status(400).json({ success: false, message: "Department and message are required" });
+    }
+
+    const now = new Date();
+    const date = now.toISOString().split("T")[0]; // YYYY-MM-DD
+    const day = now.toLocaleDateString("en-US", { weekday: "long" });
+    const time = now.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' });
+
+    const newNotify = new StudentNotify({ department, ueid, message, date, day, time });
+    await newNotify.save();
+
+    res.json({ success: true, notification: newNotify });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+//---------- Fetch all student Notify -----------
+
+app.get("/api/studentNotify", async (req, res) => {
+  try {
+    const { department, ueid } = req.query;
+    const filter = {};
+
+    if (department && department !== "All") filter.department = department;
+    if (ueid) filter.ueid = ueid;
+
+    const notifications = await StudentNotify.find(filter).sort({ createdAt: -1 });
+    res.json({ success: true, notifications });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// ---------------- TeachUEID Schema ----------------
+const teachUeidSchema = new mongoose.Schema({
+  teacherUEID: { type: String, required: true },
+  notes: { type: String, required: true },
+  date: { type: String },
+  day: { type: String },
+  time: { type: String },
+  pinned: { type: Boolean, default: false }, // ✅ Added pinned field
+}, { timestamps: true });
+
+const TeachUEID = mongoose.model("TeachUEID", teachUeidSchema);
+
+// ---------------- Add new record ----------------
+app.post("/api/teachueid", async (req, res) => {
+  try {
+    const { teacherUEID, notes, date, day, time, pinned } = req.body;
+    if (!teacherUEID || !notes) {
+      return res.status(400).json({ success: false, message: "UEID and notes are required" });
+    }
+
+    const newRecord = new TeachUEID({ teacherUEID, notes, date, day, time, pinned });
+    await newRecord.save();
+
+    res.json({ success: true, record: newRecord });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// ---------------- Get all records by UEID ----------------
+app.get("/api/teachueid/:ueid", async (req, res) => {
+  try {
+    // Sort so pinned notes come first
+    const records = await TeachUEID.find({ teacherUEID: req.params.ueid }).sort({ pinned: -1, createdAt: -1 });
+    res.json(records);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// ---------------- Toggle pin ----------------
+app.patch("/api/teachueid/:id", async (req, res) => {
+  try {
+    const { pinned } = req.body;
+    const record = await TeachUEID.findByIdAndUpdate(
+      req.params.id,
+      { pinned },
+      { new: true }
+    );
+    res.json({ success: true, record });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// ---------------- Delete record ----------------
+app.delete("/api/teachueid/:id", async (req, res) => {
+  try {
+    await TeachUEID.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: "Record deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 
 // ---------------- Server ----------------
 const PORT = 5000;

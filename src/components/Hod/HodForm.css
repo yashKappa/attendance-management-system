@@ -27,6 +27,11 @@ form {
   gap: 15px;
 }
 
+form select{
+  padding: 5px;
+  border-radius: 0.3rem;
+}
+
 form label {
   font-weight: bold;
   margin-bottom: 5px;
@@ -83,4 +88,54 @@ button[type="submit"]:hover {
   color: white;
   border-radius: 6px;
   padding: 5px 8px;
+}
+
+.close{
+  background-color: rgb(9, 37, 70) !important;
+  color: white;
+  transition: 0.1s;
+}
+
+.close:hover{
+  background-color: rgb(230, 36, 36) !important;
+}
+
+.date{
+  padding: 10px;
+  border-radius: 0.3rem;
+  border: 1px solid rgb(190, 189, 189);
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.date:hover{
+  background-color: #153355;
+  color: white;
+}
+
+.day-section{
+  gap: 20px;
+  display: flex;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.mail-text{
+  resize: vertical;
+}
+
+.mail button{
+  margin-right: 10px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.mail button:hover {
+  background-color: #153557;
+  color: white;
+  border-color: #08213b;
 }

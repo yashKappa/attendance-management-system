@@ -55,12 +55,10 @@ export default function HodForm() {
 
   return (
     <div className="form-container">
-      <h2>HOD Form</h2>
+      <h2>Teacher Form</h2>
 
-      {/* Show success message */}
       <Error message={message} type="success" onClose={() => setMessage(null)} />
 
-      {/* Show error message */}
       <Error message={error} type="error" onClose={() => setError(null)} />
 
       <form onSubmit={handleSubmit}>

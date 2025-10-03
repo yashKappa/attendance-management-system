@@ -1,29 +1,28 @@
-import { useState } from "react";
+// src/components/admin/AdminLogin.js
+import React, { useState } from "react";
 import Cookies from "js-cookie";
-import "./AdminLogin.css";
 import { useNavigate, Link } from "react-router-dom";
+import "./AdminLogin.css";
 
-export default function AdminLogin({ onLogin }) {
+export default function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
+  // hardcoded admin credentials
   const ADMIN_USERNAME = "MSG-SGKM-ADMIN";
   const ADMIN_PASSWORD = "admin123";
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setError(null);
+
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      setError("");
-      // save cookie for persistence
-      Cookies.set("adminLoggedIn", "true", { expires: 1 });
-
-      // update state if provided
-      if (onLogin) onLogin();
-
-      // redirect to admin dashboard
+      // Save cookie for persistence
+      Cookies.set("adminToken", "true", { expires: 7 });
+      // Redirect to Admin Dashboard
       navigate("/admin");
     } else {
       setError("Invalid username or password");
@@ -32,39 +31,48 @@ export default function AdminLogin({ onLogin }) {
 
   return (
     <div className="login-container">
-      <form className="login-form" onSubmit={handleLogin}>
+      <div className="login-form">
         <div className="logo1">
           <img src={`${process.env.PUBLIC_URL}/assets/logo1.png`} alt="logo" />
         </div>
         <h2>Admin Login</h2>
-        <label>Username:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error && <p className="error">{error}</p>}
-        <div className="login">
-          <button type="submit">Login</button>
-        </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <form onSubmit={handleLogin}>
+          <div>
+            <label>Username:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="login">
+            <button type="submit">Login</button>
+          </div>
+        </form>
 
         <p className="login-link">
           <Link to="/teacher-login">
-            <button type="button">Teacher Login</button>
+            <button>Teacher</button>
           </Link>
           <Link to="/hod-login">
-            <button type="button">Hod Login</button>
+            <button>Hod</button>
+          </Link>
+          <Link to="/student-login">
+            <button>Student</button>
           </Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 }

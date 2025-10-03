@@ -67,10 +67,13 @@ export default function TechLogin() {
 
                 <p className="login-link">
                     <Link to="/admin-login">
-                        <button>Admin Login</button>
+                        <button>Admin</button>
                     </Link>
                     <Link to="/hod-login">
-                        <button>Hod Login</button>
+                        <button>Hod</button>
+                    </Link>
+                    <Link to="/student-login">
+                        <button>Student</button>
                     </Link>
                 </p>
 

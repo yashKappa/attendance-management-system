@@ -1,9 +1,10 @@
+// src/components/student/stuLogin.js
 import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate, Link } from "react-router-dom";
 
-export default function HodLogin() {
+export default function StuLogin() {
   const [ueid, setUeid] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -14,17 +15,16 @@ export default function HodLogin() {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/hods/login", {
+      const response = await axios.post("http://localhost:5000/api/student/login", {
         ueid,
         password,
       });
 
       if (response.data.success) {
-        // Set cookie for auto-login (valid for 7 days)
-        Cookies.set("hodToken", response.data.token, { expires: 7 });
-
-        // Redirect to HOD Dashboard (Hod.js)
-        navigate("/hod");
+        // ✅ Save UEID as cookie
+        Cookies.set("studentUEID", response.data.token, { expires: 7 });
+        // ✅ Redirect to Student Dashboard
+        navigate("/stuDash");
       } else {
         setError(response.data.message || "Login failed");
       }
@@ -40,7 +40,7 @@ export default function HodLogin() {
         <div className="logo1">
           <img src={`${process.env.PUBLIC_URL}/assets/logo1.png`} alt="logo" />
         </div>
-        <h2>HOD Login</h2>
+        <h2>Student Login</h2>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleLogin}>
           <div>
@@ -73,8 +73,8 @@ export default function HodLogin() {
           <Link to="/teacher-login">
             <button>Teacher</button>
           </Link>
-          <Link to="/student-login">
-            <button>Student</button>
+          <Link to="/hod-login">
+            <button>Hod</button>
           </Link>
         </p>
       </div>

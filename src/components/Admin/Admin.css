@@ -129,9 +129,19 @@
 /* Responsive for mobile */
 @media screen and (max-width: 768px) {
   .hamburger {
-    display: block;
+    display: flex;
     background-color: #07111b;
     width: 100%;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hamburger i{
+    margin-right: 1rem;
+  }
+
+  .hamburger img{
+    width: 70px;
   }
 
   .admin-sidebar {
@@ -157,4 +167,80 @@
   .admin-main {
     margin-left: 0; /* Remove left margin on mobile */
   }
+
+}
+
+
+/*Profile CSS*/
+.profile-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.profile-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #272727;
+}
+
+.summary-card {
+  margin-right: 10px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #042d4e;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-evenly;
+  color: white;
+}
+
+.departments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.department-card {
+  margin-right: 10px;
+  margin-bottom: 20px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #e6eefd;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.department-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 4px 10px rgba(128, 128, 128, 0.555);
+}
+
+.department-card h3 {
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.department-card p {
+  margin: 5px 0;
+  font-weight: 500;
+  color: #000000;
+}
+
+.stu-ueid{
+    margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #4569a0;
+  cursor: pointer;
+  font-size: 14px;  
+  width: fit-content;
+  color: white;
 }

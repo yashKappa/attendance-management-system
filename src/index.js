@@ -8,6 +8,8 @@ import Dashboard from "./components/Teacher/Dashboard";
 import Admin from "./components/Admin/Admin";
 import HodLogin from "./components/Hod/HodLogin";
 import Hod from "./components/Hod/HodDash";
+import StuLogin from "./components/Student/StuLogin";
+import StuDash from "./components/Student/StuDash";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -20,6 +22,8 @@ root.render(
       <Route path="/admin" element={<Admin />} />
       <Route path="/hod-login" element={<HodLogin />} />
       <Route path="/hod" element={<Hod />} />
+      <Route path="/stuDash" element={<StuDash />} />
+      <Route path="/student-login" element={<StuLogin />} />
     </Routes>
   </BrowserRouter>
 );
