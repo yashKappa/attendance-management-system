@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import App from "./App";
 import AdminLogin from "./components/Admin/AdminLogin";
 import TechLogin from "./components/Teacher/TechLogin";
@@ -13,7 +13,7 @@ import StuDash from "./components/Student/StuDash";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
+  <Router>
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/admin-login" element={<AdminLogin />} />
@@ -25,5 +25,5 @@ root.render(
       <Route path="/stuDash" element={<StuDash />} />
       <Route path="/student-login" element={<StuLogin />} />
     </Routes>
-  </BrowserRouter>
+  </Router>
 );

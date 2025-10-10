@@ -71,7 +71,6 @@ export default function StudentAllAttend() {
         const subs = ["All", ...new Set(recordsForDate.map((a) => a.subject))];
         setSubjects(subs);
 
-        // Reset activeSubject if it no longer exists
         if (!subs.includes(activeSubject)) {
             setActiveSubject("All");
         }

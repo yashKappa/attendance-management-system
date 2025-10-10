@@ -465,7 +465,7 @@ const teachUeidSchema = new mongoose.Schema({
   date: { type: String },
   day: { type: String },
   time: { type: String },
-  pinned: { type: Boolean, default: false }, // ✅ Added pinned field
+  pinned: { type: Boolean, default: false }, 
 }, { timestamps: true });
 
 const TeachUEID = mongoose.model("TeachUEID", teachUeidSchema);
