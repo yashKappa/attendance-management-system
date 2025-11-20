@@ -55,7 +55,7 @@ export default function Admin({ onLogout }) {
         <div className="buttons">
           <div>
             <h2> Admin Panel</h2>
-            <img className="logo" src={`${process.env.PUBLIC_URL}/main-logo.png`} alt="logo" />
+            <img className="logo" src={`${process.env.PUBLIC_URL}/logo.png`} alt="logo" />
             <ul>
               {menuItems.map((item) => (
                 <li

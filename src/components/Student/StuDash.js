@@ -24,7 +24,7 @@ export default function StuDash({ onLogout }) {
   const handleLogout = () => {
     Cookies.remove("studentUEID");
     if (onLogout) onLogout();
-    navigate("/stu-login");
+    navigate("/student-login");
   };
 
   const menuItems = [

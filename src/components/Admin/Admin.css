@@ -20,7 +20,7 @@
   position: fixed; /* Fixed position so it doesn’t scroll */
   top: 0;
   left: 0;
-  width: 200px;
+  width: 250px;
   height: 100vh;
   background: #07111b;
   color: #fff;
@@ -74,7 +74,6 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s;
-  margin-bottom: 2.5rem;
 }
 
 .admin-logout-btn:hover {
