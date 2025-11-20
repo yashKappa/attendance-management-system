@@ -16,7 +16,7 @@ export default function Hod() {
     setLoading(true);
     setMessage(null);
     try {
-      const response = await fetch("http://localhost:5000/api/hod");
+      const response = await fetch("https://attendance-management-system-83fk.onrender.com/api/hod");
       if (!response.ok) throw new Error("Failed to fetch HODs");
       const data = await response.json();
       setHods(data);
@@ -34,7 +34,7 @@ export default function Hod() {
     try {
       if (!id) return;
 
-      const response = await fetch(`http://localhost:5000/api/hod/${id}`, {
+      const response = await fetch(`https://attendance-management-system-83fk.onrender.com/api/hod/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

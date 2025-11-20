@@ -12,7 +12,7 @@ export default function StudentNotify() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/studentNotify", {
+      const res = await axios.post("https://attendance-management-system-83fk.onrender.com/api/studentNotify", {
         department,
         ueid,
         message,

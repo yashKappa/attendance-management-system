@@ -25,7 +25,7 @@ const TechProfile = () => {
 
   const fetchRecords = async (teacherUEID) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/teachueid/${teacherUEID}`);
+      const res = await axios.get(`https://attendance-management-system-83fk.onrender.com/api/teachueid/${teacherUEID}`);
       // Sort records so pinned notes appear first
       const sorted = res.data.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
       setRecords(sorted);
@@ -43,7 +43,7 @@ const TechProfile = () => {
       const day = now.toLocaleDateString("en-US", { weekday: "long" });
       const time = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
 
-      await axios.post("http://localhost:5000/api/teachueid", {
+      await axios.post("https://attendance-management-system-83fk.onrender.com/api/teachueid", {
         teacherUEID: ueid,
         notes: inputValue,
         date,
@@ -61,7 +61,7 @@ const TechProfile = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/teachueid/${id}`);
+      await axios.delete(`https://attendance-management-system-83fk.onrender.com/api/teachueid/${id}`);
       fetchRecords(ueid);
     } catch (err) {
       console.error("Error deleting record:", err);
@@ -70,7 +70,7 @@ const TechProfile = () => {
 
   const handlePinToggle = async (id, pinned) => {
     try {
-      await axios.patch(`http://localhost:5000/api/teachueid/${id}`, {
+      await axios.patch(`https://attendance-management-system-83fk.onrender.com/api/teachueid/${id}`, {
         pinned: !pinned,
       });
       fetchRecords(ueid);

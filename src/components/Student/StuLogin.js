@@ -15,7 +15,7 @@ export default function StuLogin() {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/student/login", {
+      const response = await axios.post("https://attendance-management-system-83fk.onrender.com/api/student/login", {
         ueid,
         password,
       });

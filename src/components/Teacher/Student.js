@@ -26,7 +26,7 @@ export default function Student() {
 
     // Fetch teacher details by target UEID
     const teacherRes = await axios.get(
-      `http://localhost:5000/api/teachers/${targetUEID}`
+      `https://attendance-management-system-83fk.onrender.com/api/teachers/${targetUEID}`
     );
     const teacher = teacherRes.data.teacher;
     if (!teacher) throw new Error("Teacher not found");
@@ -38,7 +38,7 @@ export default function Student() {
     setTeacherSubjects(teacher.subject || "N/A");
 
     // Fetch all students
-    const studentsRes = await axios.get("http://localhost:5000/api/student");
+    const studentsRes = await axios.get("https://attendance-management-system-83fk.onrender.com/api/student");
     const allStudents = studentsRes.data;
 
     // Match only students in this teacher’s department
@@ -114,7 +114,7 @@ const handleSubmitAttendance = async () => {
     }));
 
     const response = await axios.post(
-      "http://localhost:5000/api/attendance/save",
+      "https://attendance-management-system-83fk.onrender.com/api/attendance/save",
       { records, teacherId: selectedTeacher._id }   // ✅ correct teacherId
     );
 

@@ -20,7 +20,7 @@ export default function Teacher() {
     setLoading(true);
     setMessage(null);
     try {
-      const response = await fetch("http://localhost:5000/api/teachers");
+      const response = await fetch("https://attendance-management-system-83fk.onrender.com/api/teachers");
       if (!response.ok) throw new Error("Failed to fetch teachers");
       const data = await response.json();
       setTeachers(data);
@@ -43,7 +43,7 @@ export default function Teacher() {
     try {
       if (!id) return;
 
-      const response = await fetch(`http://localhost:5000/api/teachers/${id}`, {
+      const response = await fetch(`https://attendance-management-system-83fk.onrender.com/api/teachers/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

@@ -14,7 +14,7 @@ export default function HodLogin() {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/hods/login", {
+      const response = await axios.post("https://attendance-management-system-83fk.onrender.com/api/hods/login", {
         ueid,
         password,
       });

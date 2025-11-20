@@ -23,7 +23,7 @@ export default function HodAdd({ fetchHods }) {
     const hodData = { fullName, password, ueid: newUEID };
 
     try {
-      const response = await fetch("http://localhost:5000/api/hod", {
+      const response = await fetch("https://attendance-management-system-83fk.onrender.com/api/hod", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(hodData),

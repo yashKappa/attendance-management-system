@@ -14,7 +14,7 @@ export default function TechLogin() {
         setError(null);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/teachers/login", {
+            const response = await axios.post("https://attendance-management-system-83fk.onrender.com/api/teachers/login", {
                 ueid,
                 password,
             });

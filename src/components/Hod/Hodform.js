@@ -31,7 +31,7 @@ export default function HodForm() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/hodform", {
+      const response = await axios.post("https://attendance-management-system-83fk.onrender.com/api/hodform", {
         ueid,
         time,
         notes,

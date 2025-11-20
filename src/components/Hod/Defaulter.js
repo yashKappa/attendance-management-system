@@ -19,7 +19,7 @@ export default function Defaulter({ refreshKey }) {
         const fetchDefaulters = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get("http://localhost:5000/api/studentAttendance");
+                const res = await axios.get("https://attendance-management-system-83fk.onrender.com/api/studentAttendance");
                 const data = res.data.data;
 
                 const dataWithMonth = data.map(a => ({

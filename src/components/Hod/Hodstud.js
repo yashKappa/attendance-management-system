@@ -12,7 +12,7 @@ export default function HodStud() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/student");
+        const response = await axios.get("https://attendance-management-system-83fk.onrender.com/api/student");
         setStudents(response.data);
         setFilteredStudents(response.data);
 

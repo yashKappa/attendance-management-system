@@ -21,7 +21,7 @@ export default function Attendance() {
                 setStudentUEID(ueid);
 
                 // Get student _id from Student collection
-                const studentRes = await axios.get("http://localhost:5000/api/student");
+                const studentRes = await axios.get("https://attendance-management-system-83fk.onrender.com/api/student");
                 const student = studentRes.data.find((s) => s.ueid === ueid);
                 if (!student) {
                     setError("Student not found");
@@ -31,7 +31,7 @@ export default function Attendance() {
                 const studentId = student._id;
 
                 // Get attendance records for this student
-                const attendanceRes = await axios.get("http://localhost:5000/api/studentAttendance");
+                const attendanceRes = await axios.get("https://attendance-management-system-83fk.onrender.com/api/studentAttendance");
                 const studentRecords = attendanceRes.data.data.filter(
                     (rec) => rec.ueid === ueid || rec.studentId === studentId
                 );

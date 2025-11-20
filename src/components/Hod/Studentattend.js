@@ -20,7 +20,7 @@ export default function StudentAllAttend() {
         const fetchAttendance = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get("http://localhost:5000/api/studentAttendance");
+                const res = await axios.get("https://attendance-management-system-83fk.onrender.com/api/studentAttendance");
                 const data = res.data.data;
                 setAttendances(data);
                 setFiltered(data);

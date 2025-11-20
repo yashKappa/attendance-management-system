@@ -26,7 +26,7 @@ export default function StudentAdd({ fetchStudent }) {
     const studentData = { fullName, department, email, password, ueid: newUEID };
 
     try {
-      const response = await fetch("http://localhost:5000/api/student", {
+      const response = await fetch("https://attendance-management-system-83fk.onrender.com/api/student", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(studentData),

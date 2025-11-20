@@ -12,8 +12,8 @@ const Profile = () => {
       try {
         // Fetch teachers and students
         const [teacherRes, studentRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/teachers"),
-          axios.get("http://localhost:5000/api/student"),
+          axios.get("https://attendance-management-system-83fk.onrender.com/api/teachers"),
+          axios.get("https://attendance-management-system-83fk.onrender.com/api/student"),
         ]);
 
         const teachers = teacherRes.data;

@@ -20,7 +20,7 @@ export default function Student() {
     setLoading(true);
     setMessage(null);
     try {
-      const response = await fetch("http://localhost:5000/api/student");
+      const response = await fetch("https://attendance-management-system-83fk.onrender.com/api/student");
       if (!response.ok) throw new Error("Failed to fetch students");
       const data = await response.json();
       setStudents(data);
@@ -43,7 +43,7 @@ export default function Student() {
     try {
       if (!id) return;
 
-      const response = await fetch(`http://localhost:5000/api/student/${id}`, {
+      const response = await fetch(`https://attendance-management-system-83fk.onrender.com/api/student/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

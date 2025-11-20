@@ -19,7 +19,7 @@ export default function Notification() {
           return;
         }
 
-        const res = await axios.get("http://localhost:5000/api/studentNotify");
+        const res = await axios.get("https://attendance-management-system-83fk.onrender.com/api/studentNotify");
         if (res.data.success) {
           const notifications = res.data.notifications;
 

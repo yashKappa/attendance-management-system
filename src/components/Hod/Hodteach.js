@@ -12,7 +12,7 @@ export default function HodTeach() {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/teachers");
+        const response = await axios.get("https://attendance-management-system-83fk.onrender.com/api/teachers");
         setTeachers(response.data);
         setFilteredTeachers(response.data);
 

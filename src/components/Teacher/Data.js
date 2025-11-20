@@ -21,7 +21,7 @@ export default function HodForms() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/hodforms?ueid=${ueid}`
+        `https://attendance-management-system-83fk.onrender.com/api/hodforms?ueid=${ueid}`
       );
       const data = Array.isArray(response.data) ? response.data : [];
       setForms(data);
