@@ -90,11 +90,22 @@ export default function Hod() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="4" style={{ textAlign: "center" }}>Loading HODs...</td>
+                    <td colSpan="4" style={{ textAlign: "center" }}>
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/no.gif`}
+                        className="loading"
+                        alt="AMS logo"
+                      /><br />
+                      Loading HODs...</td>
                   </tr>
                 ) : hods.length === 0 ? (
                   <tr>
-                    <td colSpan="4" style={{ textAlign: "center" }}>No HOD found</td>
+                    <td colSpan="4" style={{ textAlign: "center" }}>
+                       <img
+                        src={`${process.env.PUBLIC_URL}/assets/no-data.png`}
+                        className="found"
+                        alt="AMS logo"
+                      /><br />No HOD found</td>
                   </tr>
                 ) : (
                   hods.map((h) => (

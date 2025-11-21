@@ -45,32 +45,50 @@ const Profile = () => {
     fetchData();
   }, []);
 
-  if (loading) return <p style={{ textAlign: "center" }}>Loading data...</p>;
-
   const totalTeachers = departmentsData.reduce((sum, d) => sum + d.teacherCount, 0);
   const totalStudents = departmentsData.reduce((sum, d) => sum + d.studentCount, 0);
 
-  return (
-    <div className="profile-container">
-        <h2><FontAwesomeIcon icon={faUserTie} /> Student, Teacher Data Panel</h2>
+return (
+  <div className="profile-container">
+    <h2>
+      <FontAwesomeIcon icon={faUserTie} /> Student, Teacher Data Panel
+    </h2>
 
-      <div className="summary-card">
-        <h4>Total Departments: {departmentsData.length}</h4>
-        <h4>Total Teachers: {totalTeachers}</h4>
-        <h4>Total Students: {totalStudents}</h4>
+    {/* ✅ Loading section BELOW the H2 */}
+    {loading && (
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <img
+          src={`${process.env.PUBLIC_URL}/assets/no.gif`}
+          className="loading"
+          alt="loading"
+        />
+        <p>Loading data...</p>
       </div>
+    )}
 
-      <div className="departments-grid">
-        {departmentsData.map((dept) => (
-          <div className="department-card" key={dept.name}>
-            <h3>{dept.name}</h3>
-            <p>Total Teachers: {dept.teacherCount}</p>
-            <p>Total Students: {dept.studentCount}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    {/* ✅ Hide rest of UI until loading completes */}
+    {!loading && (
+      <>
+        <div className="summary-card">
+          <h4>Total Departments: {departmentsData.length}</h4>
+          <h4>Total Teachers: {totalTeachers}</h4>
+          <h4>Total Students: {totalStudents}</h4>
+        </div>
+
+        <div className="departments-grid">
+          {departmentsData.map((dept) => (
+            <div className="department-card" key={dept.name}>
+              <h3>{dept.name}</h3>
+              <p>Total Teachers: {dept.teacherCount}</p>
+              <p>Total Students: {dept.studentCount}</p>
+            </div>
+          ))}
+        </div>
+      </>
+    )}
+  </div>
+);
+
 };
 
 export default Profile;

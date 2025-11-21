@@ -108,7 +108,12 @@ export default function HodForms() {
             {loading ? (
               <tr>
                 <td colSpan="5" style={{ textAlign: "center", padding: "10px" }}>
-                  Loading HOD forms...
+                  <img
+                        src={`${process.env.PUBLIC_URL}/assets/no.gif`}
+                        className="loading"
+                        alt="AMS logo"
+                      /><br />
+                      Loading HOD forms...
                 </td>
               </tr>
             ) : filteredForms.length === 0 ? (

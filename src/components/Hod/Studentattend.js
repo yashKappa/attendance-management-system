@@ -61,24 +61,24 @@ export default function StudentAllAttend() {
     }, [attendances, activeDept, searchTerm]);
 
     useEffect(() => {
-    if (selectedDate) {
-        const recordsForDate = attendances.filter(
-            (a) =>
-                `${a.date} | ${a.day}` === selectedDate &&
-                (activeDept === "All" ? true : a.department === activeDept)
-        );
+        if (selectedDate) {
+            const recordsForDate = attendances.filter(
+                (a) =>
+                    `${a.date} | ${a.day}` === selectedDate &&
+                    (activeDept === "All" ? true : a.department === activeDept)
+            );
 
-        const subs = ["All", ...new Set(recordsForDate.map((a) => a.subject))];
-        setSubjects(subs);
+            const subs = ["All", ...new Set(recordsForDate.map((a) => a.subject))];
+            setSubjects(subs);
 
-        if (!subs.includes(activeSubject)) {
-            setActiveSubject("All");
+            if (!subs.includes(activeSubject)) {
+                setActiveSubject("All");
+            }
+        } else {
+            const allSubs = ["All", ...new Set(attendances.map((a) => a.subject))];
+            setSubjects(allSubs);
         }
-    } else {
-        const allSubs = ["All", ...new Set(attendances.map((a) => a.subject))];
-        setSubjects(allSubs);
-    }
-}, [attendances, selectedDate, activeDept, activeSubject]); // include activeSubject here
+    }, [attendances, selectedDate, activeDept, activeSubject]); // include activeSubject here
 
 
     const recordsByDate = selectedDate
@@ -90,22 +90,22 @@ export default function StudentAllAttend() {
             ? recordsByDate
             : recordsByDate.filter((a) => a.subject === activeSubject);
 
-            
+
     return (
         <div className="student-container">
             <h2>All Student Attendance</h2>
 
             <div className="filter">
-                  <button
-                className="date"
-                onClick={() => {
-                    setShowDefaulter(!showDefaulter);
-                    setSelectedDate(null);
-                    setActiveSubject("All"); 
-                }}
-            >
-                {showDefaulter ? "Hide Defaulter List" : "Show Defaulter List"}
-            </button>
+                <button
+                    className="date"
+                    onClick={() => {
+                        setShowDefaulter(!showDefaulter);
+                        setSelectedDate(null);
+                        setActiveSubject("All");
+                    }}
+                >
+                    {showDefaulter ? "Hide Defaulter List" : "Show Defaulter List"}
+                </button>
             </div>
 
             {showDefaulter ? (
@@ -142,17 +142,17 @@ export default function StudentAllAttend() {
                     {!selectedDate && (
                         <div className="dates-section" >
                             <h4>Select Date:</h4>
-                           <div className="day-section">
-                             {groupedDates.map((d) => (
-                                <button
-                                    className="date"
-                                    key={d}
-                                    onClick={() => setSelectedDate(d)}
-                                >
-                                    {d}
-                                </button>
-                            ))}
-                           </div>
+                            <div className="day-section">
+                                {groupedDates.map((d) => (
+                                    <button
+                                        className="date"
+                                        key={d}
+                                        onClick={() => setSelectedDate(d)}
+                                    >
+                                        {d}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     )}
 
@@ -203,6 +203,11 @@ export default function StudentAllAttend() {
                                         {loading ? (
                                             <tr>
                                                 <td colSpan="9">
+                                                    <img
+                                                        src={`${process.env.PUBLIC_URL}/assets/no.gif`}
+                                                        className="loading"
+                                                        alt="AMS logo"
+                                                    /><br />
                                                     Loading...
                                                 </td>
                                             </tr>

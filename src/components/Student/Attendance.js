@@ -85,7 +85,12 @@ export default function Attendance() {
             <div className="table-responsive">
                 {loading ? (
                     <p style={{ textAlign: "center", padding: "15px" }}>
-                        Loading attendance...
+                        <img
+                        src={`${process.env.PUBLIC_URL}/assets/no.gif`}
+                        className="loading"
+                        alt="AMS logo"
+                      /><br />
+                      Loading attendance...
                     </p>
                 ) : selectedDate ? (
                     <table className="student-table">

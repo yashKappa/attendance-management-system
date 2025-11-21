@@ -16,55 +16,55 @@ export default function Student() {
   const [teacherSubjects, setTeacherSubjects] = useState(""); // new state
 
   const fetchStudents = async (ueid = null) => {
-  try {
-    setLoading(true);
-    const currentTeacherUEID = Cookies.get("teacherToken");
-    if (!currentTeacherUEID) throw new Error("Teacher not logged in");
+    try {
+      setLoading(true);
+      const currentTeacherUEID = Cookies.get("teacherToken");
+      if (!currentTeacherUEID) throw new Error("Teacher not logged in");
 
-    // Pick target UEID: either from filter or current teacher
-    const targetUEID = ueid || currentTeacherUEID;
+      // Pick target UEID: either from filter or current teacher
+      const targetUEID = ueid || currentTeacherUEID;
 
-    // Fetch teacher details by target UEID
-    const teacherRes = await axios.get(
-      `https://attendance-management-system-83fk.onrender.com/api/teachers/${targetUEID}`
-    );
-    const teacher = teacherRes.data.teacher;
-    if (!teacher) throw new Error("Teacher not found");
+      // Fetch teacher details by target UEID
+      const teacherRes = await axios.get(
+        `https://attendance-management-system-83fk.onrender.com/api/teachers/${targetUEID}`
+      );
+      const teacher = teacherRes.data.teacher;
+      if (!teacher) throw new Error("Teacher not found");
 
-    // ✅ Always update selectedTeacher (important for filtered case too)
-    setSelectedTeacher(teacher);
+      // ✅ Always update selectedTeacher (important for filtered case too)
+      setSelectedTeacher(teacher);
 
-    // Save teacher’s subject
-    setTeacherSubjects(teacher.subject || "N/A");
+      // Save teacher’s subject
+      setTeacherSubjects(teacher.subject || "N/A");
 
-    // Fetch all students
-    const studentsRes = await axios.get("https://attendance-management-system-83fk.onrender.com/api/student");
-    const allStudents = studentsRes.data;
+      // Fetch all students
+      const studentsRes = await axios.get("https://attendance-management-system-83fk.onrender.com/api/student");
+      const allStudents = studentsRes.data;
 
-    // Match only students in this teacher’s department
-    const matchedStudents = allStudents.filter(
-      (s) => s.department === teacher.department
-    );
+      // Match only students in this teacher’s department
+      const matchedStudents = allStudents.filter(
+        (s) => s.department === teacher.department
+      );
 
-    setStudents(matchedStudents);
+      setStudents(matchedStudents);
 
-    // Reset attendance state
-    const initialAttendance = {};
-    matchedStudents.forEach((s) => {
-      initialAttendance[s._id] = { present: false, absent: false };
-    });
-    setAttendance(initialAttendance);
-    setError(null);
-  } catch (err) {
-    console.error(err);
-    setError(err.message);
-    setStudents([]);
-    setTeacherSubjects("");
-    setSelectedTeacher(null);
-  } finally {
-    setLoading(false);
-  }
-};
+      // Reset attendance state
+      const initialAttendance = {};
+      matchedStudents.forEach((s) => {
+        initialAttendance[s._id] = { present: false, absent: false };
+      });
+      setAttendance(initialAttendance);
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+      setStudents([]);
+      setTeacherSubjects("");
+      setSelectedTeacher(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   useEffect(() => {
@@ -81,64 +81,64 @@ export default function Student() {
     }));
   };
 
-const handleSubmitAttendance = async () => {
-  try {
-    for (let s of students) {
-      const record = attendance[s._id];
-      if (!record.present && !record.absent) {
-        setError(`Please mark Present or Absent for ${s.fullName}`);
-        setSuccess(null);
-        return;
+  const handleSubmitAttendance = async () => {
+    try {
+      for (let s of students) {
+        const record = attendance[s._id];
+        if (!record.present && !record.absent) {
+          setError(`Please mark Present or Absent for ${s.fullName}`);
+          setSuccess(null);
+          return;
+        }
       }
-    }
 
-    if (!selectedTeacher) throw new Error("Teacher not found");
+      if (!selectedTeacher) throw new Error("Teacher not found");
 
-    // Get current date, day, and time
-    const now = new Date();
-    const date = now.toLocaleDateString();
-    const day = now.toLocaleDateString("en-US", { weekday: "long" });
-    const time = now.toLocaleTimeString();
+      // Get current date, day, and time
+      const now = new Date();
+      const date = now.toLocaleDateString();
+      const day = now.toLocaleDateString("en-US", { weekday: "long" });
+      const time = now.toLocaleTimeString();
 
-    const records = students.map((s) => ({
-      studentId: s._id,
-      fullName: s.fullName,
-      email: s.email,
-      department: s.department,
-      subject: selectedTeacher.subject || "N/A",   // ✅ use selectedTeacher
-      status: attendance[s._id].present ? "present" : "absent",
-      teacherUEID: selectedTeacher.UEID,           // ✅ use selectedTeacher
-      date,
-      day,
-      time,
-    }));
+      const records = students.map((s) => ({
+        studentId: s._id,
+        fullName: s.fullName,
+        email: s.email,
+        department: s.department,
+        subject: selectedTeacher.subject || "N/A",   // ✅ use selectedTeacher
+        status: attendance[s._id].present ? "present" : "absent",
+        teacherUEID: selectedTeacher.UEID,           // ✅ use selectedTeacher
+        date,
+        day,
+        time,
+      }));
 
-    const response = await axios.post(
-      "https://attendance-management-system-83fk.onrender.com/api/attendance/save",
-      { records, teacherId: selectedTeacher._id }   // ✅ correct teacherId
-    );
+      const response = await axios.post(
+        "https://attendance-management-system-83fk.onrender.com/api/attendance/save",
+        { records, teacherId: selectedTeacher._id }   // ✅ correct teacherId
+      );
 
-    if (response.data.success) {
-      setSuccess("Attendance saved successfully!");
-      setError(null);
+      if (response.data.success) {
+        setSuccess("Attendance saved successfully!");
+        setError(null);
 
-      // Reset checkboxes
-      const resetAttendance = {};
-      students.forEach((s) => {
-        resetAttendance[s._id] = { present: false, absent: false };
-      });
-      setAttendance(resetAttendance);
+        // Reset checkboxes
+        const resetAttendance = {};
+        students.forEach((s) => {
+          resetAttendance[s._id] = { present: false, absent: false };
+        });
+        setAttendance(resetAttendance);
 
-    } else {
-      setError("Failed to save attendance");
+      } else {
+        setError("Failed to save attendance");
+        setSuccess(null);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Error submitting attendance: " + err.message);
       setSuccess(null);
     }
-  } catch (err) {
-    console.error(err);
-    setError("Error submitting attendance: " + err.message);
-    setSuccess(null);
-  }
-};
+  };
 
 
   const filteredStudents = students.filter((s) => {
@@ -183,7 +183,7 @@ const handleSubmitAttendance = async () => {
             <tr>
               <th>#</th>
               <th>Full Name</th>
-              <th>Subject</th> 
+              <th>Subject</th>
               <th>Department</th>
               <th>Email</th>
               <th>Present</th>
@@ -194,6 +194,11 @@ const handleSubmitAttendance = async () => {
             {loading ? (
               <tr>
                 <td colSpan="6" style={{ textAlign: "center" }}>
+                  <img
+                    src={`${process.env.PUBLIC_URL}/assets/no.gif`}
+                    className="loading"
+                    alt="AMS logo"
+                  /><br />
                   Loading students...
                 </td>
               </tr>

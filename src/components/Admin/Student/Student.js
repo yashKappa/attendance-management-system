@@ -155,7 +155,13 @@ export default function Student() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="5" style={{ textAlign: "center" }}>Loading students...</td>
+                    <td colSpan="6" style={{ textAlign: "center" }}>
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/no.gif`}
+                        className="loading"
+                        alt="AMS logo"
+                      /><br />
+                      Loading students...</td>
                   </tr>
                 ) : filteredStudents.length === 0 ? (
                   <tr>

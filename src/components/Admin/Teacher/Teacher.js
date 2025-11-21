@@ -100,10 +100,10 @@ export default function Teacher() {
 
       {/* Error or Success Message */}
       {!showAddForm && message && (
-        <Error 
-          message={message} 
-          type={message.includes("successfully") ? "success" : "error"} 
-          onClose={() => setMessage(null)} 
+        <Error
+          message={message}
+          type={message.includes("successfully") ? "success" : "error"}
+          onClose={() => setMessage(null)}
         />
       )}
 
@@ -116,29 +116,29 @@ export default function Teacher() {
           </div>
 
           <div className="search">
-        <div className="filter-buttons">
-         <div>
-             {departments.map((dept) => (
-            <button
-              key={dept}
-              className={activeDept === dept ? "active" : ""}
-              onClick={() => setActiveDept(dept)}
-            >
-              {dept}
-            </button>
-          ))}
-         </div>
+            <div className="filter-buttons">
+              <div>
+                {departments.map((dept) => (
+                  <button
+                    key={dept}
+                    className={activeDept === dept ? "active" : ""}
+                    onClick={() => setActiveDept(dept)}
+                  >
+                    {dept}
+                  </button>
+                ))}
+              </div>
 
-       <div className="filter">
-         <input
-          type="text"
-          placeholder="Search by name, UEID or email..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-       </div>
-         </div>
-      </div>
+              <div className="filter">
+                <input
+                  type="text"
+                  placeholder="Search by name, UEID or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
 
           <div className="table-responsive">
             <table className="teacher-table">
@@ -154,12 +154,21 @@ export default function Teacher() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="6" style={{ textAlign: "center" }}>Loading teachers...</td>
+                  <tr className="circle">
+                    <td colSpan="6" className="load" style={{ textAlign: "center" }}>
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/no.gif`}
+                        className="loading"
+                        alt="AMS logo"
+                      /><br />
+                      Loading teachers...
+                    </td>
                   </tr>
+
                 ) : filteredTeachers.length === 0 ? (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: "center" }}>No teachers found</td>
+                    <td colSpan="6" style={{ textAlign: "center" }}>
+                      No teachers found</td>
                   </tr>
                 ) : (
                   filteredTeachers.map((teacher) => (

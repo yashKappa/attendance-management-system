@@ -156,7 +156,13 @@ export default function Defaulter({ refreshKey }) {
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan="7" style={{ textAlign: "center" }}>Loading...</td>
+                                <td colSpan="7" style={{ textAlign: "center" }}>
+                                    <img
+                        src={`${process.env.PUBLIC_URL}/assets/no.gif`}
+                        className="loading"
+                        alt="AMS logo"
+                      /><br />
+                      Loading...</td>
                             </tr>
                         ) : filteredDefaulters.length > 0 ? (
                             filteredDefaulters.map((d, idx) => (
