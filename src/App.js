@@ -11,7 +11,7 @@ import StuLogin from "./components/Student/StuLogin";
 
 function App() {
   const [userType, setUserType] = useState(null); // "admin" | "teacher" | "student" | "hod"
-  const [selectedLogin, setSelectedLogin] = useState("admin"); // which login form to show
+  const selectedLogin = useState("admin"); // which login form to show
 
   useEffect(() => {
     const adminLoggedIn = Cookies.get("adminLoggedIn");
