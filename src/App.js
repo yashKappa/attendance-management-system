@@ -10,8 +10,9 @@ import StuDash from "./components/Student/StuDash";
 import StuLogin from "./components/Student/StuLogin";
 
 function App() {
-  const [userType, setUserType] = useState(null); // "admin" | "teacher" | "student" | "hod"
-  const selectedLogin = useState("admin"); // which login form to show
+  const [userType, setUserType] = useState(null);
+  const selectedLogin= useState("admin");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const adminLoggedIn = Cookies.get("adminLoggedIn");
@@ -23,22 +24,23 @@ function App() {
     else if (teacherToken) setUserType("teacher");
     else if (studentUEID) setUserType("student");
     else if (hodToken) setUserType("hod");
+
+    setLoading(false);
   }, []);
+
+  if (loading) return null;
 
   if (userType === "admin") return <Admin />;
   if (userType === "teacher") return <Dashboard />;
   if (userType === "student") return <StuDash />;
   if (userType === "hod") return <HodDash />;
 
-  // Show login form selection
   return (
     <div className="login-container">
-      <div>
-        {selectedLogin === "admin" && <AdminLogin onLogin={() => setUserType("admin")} />}
-        {selectedLogin === "teacher" && <TechLogin onLogin={() => setUserType("teacher")} />}
-        {selectedLogin === "student" && <StuLogin onLogin={() => setUserType("student")} />}
-        {selectedLogin === "hod" && <HodLogin onLogin={() => setUserType("hod")} />}
-      </div>
+      {selectedLogin === "admin" && <AdminLogin onLogin={() => setUserType("admin")} />}
+      {selectedLogin === "teacher" && <TechLogin onLogin={() => setUserType("teacher")} />}
+      {selectedLogin === "student" && <StuLogin onLogin={() => setUserType("student")} />}
+      {selectedLogin === "hod" && <HodLogin onLogin={() => setUserType("hod")} />}
     </div>
   );
 }
