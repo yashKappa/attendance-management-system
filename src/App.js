@@ -11,7 +11,7 @@ import StuLogin from "./components/Student/StuLogin";
 
 function App() {
   const [userType, setUserType] = useState(null);
-  const selectedLogin= useState("admin");
+const [selectedLogin] = useState("admin");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function App() {
     setLoading(false);
   }, []);
 
-  if (loading) return null;
+  if (loading) return <div>Loading...</div>;
 
   if (userType === "admin") return <Admin />;
   if (userType === "teacher") return <Dashboard />;
@@ -44,5 +44,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
