@@ -527,6 +527,49 @@ app.delete("/api/teachueid/:id", async (req, res) => {
   }
 });
 
+app.get("/api/admin/analytics", async (req, res) => {
+  try {
+    // 1. Get total active forms (within 60s TTL window)
+    const activeFormsCount = await HodForm.countDocuments();
+
+    // 2. Aggregate active forms submitted per day of the week
+    const dayStats = await HodForm.aggregate([
+      { $unwind: "$days" },
+      {
+        $group: {
+          _id: "$days",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // Format day distribution into an easy map
+    const dayMap = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
+    dayStats.forEach((stat) => {
+      // Handles both short ("Mon") and full ("Monday") formats
+      const shortDay = stat._id.substring(0, 3);
+      if (dayMap[shortDay] !== undefined) {
+        dayMap[shortDay] += stat.count;
+      }
+    });
+
+    // 3. Get total HOD count
+    const totalHods = await Hod.countDocuments();
+
+    res.json({
+      success: true,
+      data: {
+        totalHods,
+        activeFormsCount,
+        weeklySubmissions: Object.values(dayMap),
+        daysOfWeek: Object.keys(dayMap),
+      },
+    });
+  } catch (err) {
+    console.error("Analytics Error:", err);
+    res.status(500).json({ success: false, message: "Server error fetching analytics" });
+  }
+});
 
 // ---------------- Server ----------------
 const PORT = 5000;
