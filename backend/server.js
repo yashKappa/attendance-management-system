@@ -571,6 +571,159 @@ app.get("/api/admin/analytics", async (req, res) => {
   }
 });
 
+// -------------------- Analytics: Student Dashboard Data --------------------
+app.get("/api/student/analytics", async (req, res) => {
+  try {
+    const { ueid } = req.query;
+
+    if (!ueid) {
+      return res.status(400).json({
+        success: false,
+        message: "Student UEID is required in query parameters.",
+      });
+    }
+
+    // 1. Core KPIs Aggregation Pipeline
+    const stats = await Attendance.aggregate([
+      { $match: { ueid: ueid } },
+      {
+        $group: {
+          _id: null,
+          totalClasses: { $sum: 1 },
+          totalPresent: {
+            $sum: { $cond: [{ $eq: ["$status", "present"] }, 1, 0] },
+          },
+          totalAbsent: {
+            $sum: { $cond: [{ $eq: ["$status", "absent"] }, 1, 0] },
+          },
+        },
+      },
+    ]);
+
+    const kpis = stats[0] || { totalClasses: 0, totalPresent: 0, totalAbsent: 0 };
+    const overallPercentage =
+      kpis.totalClasses > 0
+        ? Number(((kpis.totalPresent / kpis.totalClasses) * 100).toFixed(1))
+        : 0;
+
+    // 2. Subject-wise Attendance Breakdown (For Bar Chart & Warnings)
+    const subjectStats = await Attendance.aggregate([
+      { $match: { ueid: ueid } },
+      {
+        $group: {
+          _id: "$subject",
+          total: { $sum: 1 },
+          present: {
+            $sum: { $cond: [{ $eq: ["$status", "present"] }, 1, 0] },
+          },
+        },
+      },
+      {
+        $project: {
+          subject: "$_id",
+          total: 1,
+          present: 1,
+          percentage: {
+            $round: [
+              { $multiply: [{ $divide: ["$present", "$total"] }, 100] },
+              1,
+            ],
+          },
+        },
+      },
+      { $sort: { subject: 1 } },
+    ]);
+
+    // Format subject lists for ChartJS
+    const subjectNames = subjectStats.map((item) => item.subject || "Unknown");
+    const subjectPercentages = subjectStats.map((item) => item.percentage || 0);
+
+    // Identify subjects needing attention (< 75% attendance)
+    const warningSubjects = subjectStats.filter((item) => item.percentage < 75);
+
+    // 3. Progress Trend Breakdown by Date (Last 7 Sessions for Line Chart)
+    const trendStats = await Attendance.aggregate([
+      { $match: { ueid: ueid } },
+      {
+        $group: {
+          _id: "$date",
+          total: { $sum: 1 },
+          present: {
+            $sum: { $cond: [{ $eq: ["$status", "present"] }, 1, 0] },
+          },
+        },
+      },
+      {
+        $project: {
+          date: "$_id",
+          percentage: {
+            $round: [
+              { $multiply: [{ $divide: ["$present", "$total"] }, 100] },
+              0,
+            ],
+          },
+        },
+      },
+      { $sort: { date: 1 } },
+      { $limit: 7 },
+    ]);
+
+    const trendDates = trendStats.map((item) => item.date);
+    const trendPercentages = trendStats.map((item) => item.percentage);
+
+    // 4. Fetch Student Profile Meta
+    const studentProfile = await Student.findOne({ ueid })
+      .select("fullName email department ueid")
+      .lean();
+
+    // 5. Fetch Active Broadcast Notifications for Department or General
+    const dept = studentProfile?.department || "All";
+    const notifications = await Notification.find({
+      $or: [{ department: dept }, { department: "All" }, { targetUeid: ueid }],
+    })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .lean();
+
+    res.json({
+      success: true,
+      data: {
+        profile: studentProfile || {
+          fullName: "Student Profile",
+          email: "N/A",
+          department: "General",
+          ueid: ueid,
+        },
+        kpis: {
+          totalClasses: kpis.totalClasses,
+          totalPresent: kpis.totalPresent,
+          totalAbsent: kpis.totalAbsent,
+          overallPercentage,
+          warningSubjectsCount: warningSubjects.length,
+          warningSubjectsList: warningSubjects,
+        },
+        charts: {
+          subjectBreakdown: {
+            labels: subjectNames,
+            percentages: subjectPercentages,
+          },
+          progressTrend: {
+            dates: trendDates,
+            percentages: trendPercentages,
+          },
+        },
+        notifications,
+      },
+    });
+  } catch (err) {
+    console.error("Student Analytics Error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Server error fetching student analytics",
+    });
+  }
+});
+
 // ---------------- Server ----------------
 const PORT = 5000;
 server.listen(PORT, "0.0.0.0", () => {
