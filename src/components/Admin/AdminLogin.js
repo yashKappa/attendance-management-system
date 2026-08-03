@@ -11,7 +11,7 @@ export default function AdminLoginModern() {
   const navigate = useNavigate();
 
   // hardcoded admin credentials
-  const ADMIN_USERNAME = "MSG-SGKM-ADMIN";
+  const ADMIN_USERNAME = "Admin";
   const ADMIN_PASSWORD = "admin123";
 
   const handleLogin = (e) => {
