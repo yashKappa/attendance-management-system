@@ -62,7 +62,7 @@ return (
           className="loading"
           alt="loading"
         />
-        <p>Loading data...</p>
+        <p>Loading datas...</p>
       </div>
     )}
 
